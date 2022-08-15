@@ -1,6 +1,4 @@
 <template>
-  <!-- <v-col> -->
-
   <v-card
     data-app
     :id="id"
@@ -77,7 +75,6 @@
       </v-card>
     </v-dialog>
   </v-card>
-  <!-- </v-col> -->
 </template>
 <script>
 export default {
@@ -105,7 +102,6 @@ export default {
       this.$emit("dragOff");
     },
     deleteSC() {
-      console.log("DELETE SCID COMPONENT : ", this.id);
       this.$emit("delete", this.id);
       this.dialog = !this.dialog;
     },

@@ -53,10 +53,6 @@ export default {
             "Titre vraiment très long pour une si petite carte, ça fait beaucoup de mots",
         },
       ],
-      // newShortcutData: {
-      //   id: Math.random(),
-      //   title: "énième titre",
-      // },
       dragActivated: false,
       squaredNumber: null,
       new_id: null,
@@ -66,15 +62,6 @@ export default {
   computed: {
     // Fonction qui permet de calculer le nombre d'éléments grisés à ajouter en fonction de la taille de l'écran.
     calculateSquared() {
-      console.log("Inner height :", window.innerHeight);
-      console.log("DIVISE PAR 200 : ", window.innerHeight / 200);
-      console.log(" ARRONDI : ", Math.ceil(window.innerHeight / 200));
-      console.log(
-        "Nombre de de carrés : ",
-        (Math.ceil(window.innerHeight / 200) - 1) * 5 -
-          this.shortcutData.length -
-          1
-      );
       let squaredNum =
         (Math.ceil(window.innerHeight / 200) - 1) * 5 -
         this.shortcutData.length -
@@ -90,6 +77,7 @@ export default {
       } else {
         this.cardSizeXS = false;
       }
+      return;
     },
   },
 
@@ -101,17 +89,14 @@ export default {
   methods: {
     //Fonction qui supprimer un raccourcis, réorganise les éléments en fonction des raccourcis restant et remplace à l'affichage un raccourcis que l'on vient d'enlever par un élément grisé.
     deleteShortcut(scId) {
-      console.log("DELETE SCID : ", scId);
       this.shortcutData = this.shortcutData.filter(
         (shortcut) => shortcut.id != scId
       );
       this.squaredNumber = this.squaredNumber + 1;
-      console.log("SHORTCUT DATA : ", this.shortcutData);
     },
 
     //Fonction qui permet d'ajouter un nouveau raccourcis et de supprimer un élément grisé.
     addNewSC() {
-      // this.shortcutData.push(this.newShortcutData);
       let randomId = Math.random();
       this.shortcutData.push({
         id: randomId,
