@@ -2,7 +2,6 @@
   <v-container>
     <v-col cols="12">
       <v-row id="board" @dragover.prevent @drop.prevent="drop" dense>
-        <!-- <p>{{ this.shortcutData[2].title }}</p> -->
         <short-cut
           v-for="shortcut in shortcutData"
           :key="shortcut.id"
@@ -13,13 +12,16 @@
           @dragOff="draggableDeactivate"
           :draggable="dragActivated"
         ></short-cut>
-        <!-- <v-col class="addSC-col"> -->
-        <v-card class="addSC-card" @click="addNewSC">
+        <v-card
+          class="addSC-card"
+          @click="addNewSC"
+          :class="[cardSizeXS ? 'col-5' : '']"
+        >
           <v-icon color="#EA6721"> mdi-plus </v-icon>
         </v-card>
-        <!-- </v-col> -->
         <v-card
           class="waiting-card"
+          :class="[cardSizeXS ? 'col-5' : '']"
           v-for="n in squaredNumber"
           :key="n + 10"
         ></v-card>
@@ -51,16 +53,18 @@ export default {
             "Titre vraiment très long pour une si petite carte, ça fait beaucoup de mots",
         },
       ],
-      newShortcutData: {
-        id: Math.random(),
-        title: "énième titre",
-      },
+      // newShortcutData: {
+      //   id: Math.random(),
+      //   title: "énième titre",
+      // },
       dragActivated: false,
       squaredNumber: null,
       new_id: null,
+      cardSizeXS: false,
     };
   },
   computed: {
+    // Fonction qui permet de calculer le nombre d'éléments grisés à ajouter en fonction de la taille de l'écran.
     calculateSquared() {
       console.log("Inner height :", window.innerHeight);
       console.log("DIVISE PAR 200 : ", window.innerHeight / 200);
@@ -78,25 +82,45 @@ export default {
       this.squaredNumber = squaredNum;
       return squaredNum;
     },
+    // Fonction qui donne la largeur de l'écran afin d'activer une partie du responsive.
+    checkWindowWidth() {
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 600) {
+        this.cardSizeXS = true;
+      } else {
+        this.cardSizeXS = false;
+      }
+    },
   },
 
   mounted() {
     this.calculateSquared;
     this.new_id = this.shortcutData.length;
+    this.checkWindowWidth;
   },
   methods: {
+    //Fonction qui supprimer un raccourcis, réorganise les éléments en fonction des raccourcis restant et remplace à l'affichage un raccourcis que l'on vient d'enlever par un élément grisé.
     deleteShortcut(scId) {
-      console.log("DELETE SHORTCUT : ", scId);
+      console.log("DELETE SCID : ", scId);
       this.shortcutData = this.shortcutData.filter(
         (shortcut) => shortcut.id != scId
       );
-      console.log("SQUARED NUMBER BEFORE DELETE : ", this.squaredNumber);
       this.squaredNumber = this.squaredNumber + 1;
+      console.log("SHORTCUT DATA : ", this.shortcutData);
     },
+
+    //Fonction qui permet d'ajouter un nouveau raccourcis et de supprimer un élément grisé.
     addNewSC() {
-      this.shortcutData.push(this.newShortcutData);
+      // this.shortcutData.push(this.newShortcutData);
+      let randomId = Math.random();
+      this.shortcutData.push({
+        id: randomId,
+        title: "énième titre",
+      });
       this.squaredNumber = this.squaredNumber - 1;
     },
+
+    //Fonction qui permet de faire le changement d'emplacement du raccourcis au drop.
     drop(e) {
       const card_id = e.dataTransfer.getData("id");
       const card = document.getElementById(card_id);
@@ -106,12 +130,13 @@ export default {
       // e.target.appendChild(card);
       e.target.insertBefore(card, add_card);
     },
+
+    //Fonction qui active le drag & drop lorsque l'on attrape l'icone
     draggableActivate() {
-      console.log("DRAG ON");
       this.dragActivated = true;
     },
+    //Fonction qui désactive le drag & drop lorsque l'on lâche l'icone
     draggableDeactivate() {
-      console.log("DRAG OFF");
       this.dragActivated = false;
     },
   },
@@ -119,6 +144,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#board {
+  justify-content: center;
+}
 .addSC-card,
 .waiting-card {
   width: 200px;

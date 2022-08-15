@@ -1,11 +1,13 @@
 <template>
   <!-- <v-col> -->
+
   <v-card
     data-app
     :id="id"
     :draggable="draggable"
     @dragstart="dragStart"
     @dragover.stop
+    :class="[cardSizeXS ? 'col-5' : '']"
   >
     <v-btn
       @mousedown="switchDragOn"
@@ -18,15 +20,19 @@
     >
     <v-img
       src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-      height="60px"
+      height="55px"
     ></v-img>
-    <v-avatar color="#FDE3CE" size="36">
+    <v-avatar
+      color="#FDE3CE"
+      size="36"
+      :class="[cardSizeXS ? 'avatar-xs' : '']"
+    >
       <v-icon dark color="#EA6721"> mdi-school-outline </v-icon>
     </v-avatar>
-    <v-card-text class="text--primary">
+    <v-card-text class="text--primary" :class="[cardSizeXS ? 'text-xs' : '']">
       <p>{{ title }}</p>
     </v-card-text>
-    <v-dialog v-model="dialog">
+    <v-dialog v-model="dialog" max-width="400">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           v-bind="attrs"
@@ -40,7 +46,7 @@
           <v-icon dark color="#EA6721">mdi-trash-can-outline</v-icon>
         </v-btn>
       </template>
-      <v-card>
+      <v-card width="390" class="deleteSC-container">
         <v-card-text>
           Êtes-vous sûr de vouloir supprimer ce raccourcis ?
         </v-card-text>
@@ -49,8 +55,24 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="deleteSC">Oui</v-btn>
-          <v-btn color="primary" text @click="dialog = false"> Non </v-btn>
+          <v-btn
+            color="#4D6E80"
+            text
+            @click="dialog = false"
+            width="80px"
+            plain
+            class="no-btn"
+          >
+            Non
+          </v-btn>
+          <v-btn
+            @click="deleteSC"
+            color="#EA6721"
+            width="80px"
+            plain
+            class="yes-btn"
+            >Oui</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -64,9 +86,17 @@ export default {
   data() {
     return {
       dialog: false,
+      cardSizeXS: false,
     };
   },
-
+  computed: {
+    checkWindowWidth() {
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 600) {
+        this.cardSizeXS = true;
+      }
+    },
+  },
   methods: {
     switchDragOn() {
       this.$emit("dragOn");
@@ -75,7 +105,7 @@ export default {
       this.$emit("dragOff");
     },
     deleteSC() {
-      console.log("CLICK DELETESC");
+      console.log("DELETE SCID COMPONENT : ", this.id);
       this.$emit("delete", this.id);
       this.dialog = !this.dialog;
     },
@@ -87,6 +117,9 @@ export default {
         target.style.display = "none";
       }, 0);
     },
+  },
+  mounted() {
+    this.checkWindowWidth;
   },
 };
 </script>
@@ -129,11 +162,16 @@ export default {
   }
   .v-avatar {
     position: absolute;
-    top: 30px;
+    top: 20%;
     left: 20px;
+    transform: translateY(-20%);
+    &.avatar-xs {
+      top: 23%;
+      transform: translateY(-23%);
+    }
   }
   .v-card__text {
-    height: calc(100% - 60px);
+    height: calc(100% - 55px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,6 +180,23 @@ export default {
       color: #0c5983;
       font-family: "Roboto";
       text-align: center;
+    }
+    &.text-xs {
+      font-size: 12px;
+    }
+  }
+
+  .deleteSC-container {
+    height: 150px;
+    width: 390px;
+    font-family: "Roboto";
+
+    .v-card__text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      color: #0c5983;
     }
   }
 }
