@@ -91,7 +91,10 @@ export default {
       const screenWidth = window.innerWidth;
       if (screenWidth < 600) {
         this.cardSizeXS = true;
+      } else {
+        this.cardSizeXS = false;
       }
+      return screenWidth;
     },
   },
   methods: {

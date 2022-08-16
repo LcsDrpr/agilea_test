@@ -60,15 +60,6 @@ export default {
     };
   },
   computed: {
-    // Fonction qui permet de calculer le nombre d'éléments grisés à ajouter en fonction de la taille de l'écran.
-    calculateSquared() {
-      let squaredNum =
-        (Math.ceil(window.innerHeight / 200) - 1) * 5 -
-        this.shortcutData.length -
-        1;
-      this.squaredNumber = squaredNum;
-      return squaredNum;
-    },
     // Fonction qui donne la largeur de l'écran afin d'activer une partie du responsive.
     checkWindowWidth() {
       const screenWidth = window.innerWidth;
@@ -77,12 +68,12 @@ export default {
       } else {
         this.cardSizeXS = false;
       }
-      return;
+      return screenWidth;
     },
   },
 
   mounted() {
-    this.calculateSquared;
+    this.calculateSquared();
     this.new_id = this.shortcutData.length;
     this.checkWindowWidth;
   },
@@ -123,6 +114,16 @@ export default {
     //Fonction qui désactive le drag & drop lorsque l'on lâche l'icone
     draggableDeactivate() {
       this.dragActivated = false;
+    },
+
+    // Fonction qui permet de calculer le nombre d'éléments grisés à ajouter en fonction de la taille de l'écran.
+    calculateSquared() {
+      let squaredNum =
+        (Math.ceil(window.innerHeight / 200) - 1) * 5 -
+        this.shortcutData.length -
+        1;
+      this.squaredNumber = squaredNum;
+      return squaredNum;
     },
   },
 };
